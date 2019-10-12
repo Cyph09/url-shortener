@@ -1,0 +1,29 @@
+{
+  "name": "url-shortener",
+  "version": "1.0.0",
+  "description": "URL shortener app, part of freecodeCamp APIs & Microservices certification. Technologies used Node.js, express.js, Mongodb, Handlebars.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index",
+    "dev": "nodemon index"
+  },
+  "keywords": [
+    "URL",
+    "shortener",
+    "Nodejs",
+    "expressjs",
+    "MongoDB",
+    "API."
+  ],
+  "author": "Swaleh Mhina",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "mongoose": "^5.7.4",
+    "shortid": "^2.2.15",
+    "valid-url": "^1.0.9"
+  },
+  "devDependencies": {
+    "nodemon": "^1.19.3"
+  }
+}

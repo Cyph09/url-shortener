@@ -8,13 +8,31 @@ const router = express.Router();
 const baseUrl = require("../config").BASE_URL;
 const UrlShortenModel = require("../models/urlShorten");
 
-router.get("/:code", (req, res, next) => {
+router.get("/:code", async (req, res, next) => {
   // get url code
   // find the url by code from db and compare
   // if it exists/valid redirect to the longUrl
   // else throw an error/ return not found: 404
-
-  res.send("Hello!");
+  const urlCode = req.params.code;
+  try {
+    const { longUrl } = await UrlShortenModel.findOne({ urlCode });
+    if (!longUrl) {
+      try {
+        const error = new Error("Url not found");
+        error.statusCode = 404;
+        throw error;
+      } catch (err) {
+        next(err);
+      }
+    }
+    console.log(longUrl);
+    res.redirect(longUrl);
+  } catch (err) {
+    if (!err.statusCode) {
+      err.statusCode = 500;
+      next(err);
+    }
+  }
 });
 
 router.post("/shorten", async (req, res, next) => {
@@ -33,9 +51,10 @@ router.post("/shorten", async (req, res, next) => {
     }
   }
 
+  //   validate long url
   if (!validUrl.isWebUri(longUrl)) {
     try {
-      const error = new Error("The Long url is not valid");
+      const error = new Error("The original provided url is not valid");
       error.statusCode = 404;
       throw error;
     } catch (err) {

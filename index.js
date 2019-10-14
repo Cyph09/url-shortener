@@ -11,9 +11,15 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 // Routes
-app.use("/", require("./routes/urlShorten"));
+app.use("/api/shorturl/", require("./routes/urlShorten"));
 
 // Error handling middleware
+app.use((error, req, res, next) => {
+  console.log(error);
+  const status = error.statusCode || 500;
+  const message = error.message;
+  res.status(status).json({ message });
+});
 
 // Server & mongodb connection
 app.listen(config.PORT, () => {

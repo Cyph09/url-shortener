@@ -15,8 +15,8 @@ router.get("/:code", async (req, res, next) => {
   // else throw an error/ return not found: 404
   const urlCode = req.params.code;
   try {
-    const { longUrl } = await UrlShortenModel.findOne({ urlCode });
-    if (!longUrl) {
+    const urlInfo = await UrlShortenModel.findOne({ urlCode });
+    if (!urlInfo) {
       try {
         const error = new Error("Url not found");
         error.statusCode = 404;
@@ -25,13 +25,15 @@ router.get("/:code", async (req, res, next) => {
         next(err);
       }
     }
-    console.log(longUrl);
-    res.redirect(longUrl);
+    // res
+    //   .status(200)
+    //   .json({ longUrl: urlInfo.longUrl, shortUrl: urlInfo.shortUrl });
+    res.redirect(urlInfo.longUrl);
   } catch (err) {
     if (!err.statusCode) {
       err.statusCode = 500;
-      next(err);
     }
+    next(err);
   }
 });
 
@@ -44,7 +46,7 @@ router.post("/shorten", async (req, res, next) => {
     // else continue to validate long url
     try {
       const error = new Error("Base url is not valid.");
-      error.statusCode = 404;
+      error.statusCode = 400;
       throw error;
     } catch (err) {
       next(err);
@@ -55,7 +57,7 @@ router.post("/shorten", async (req, res, next) => {
   if (!validUrl.isWebUri(longUrl)) {
     try {
       const error = new Error("The original provided url is not valid");
-      error.statusCode = 404;
+      error.statusCode = 400;
       throw error;
     } catch (err) {
       next(err);
@@ -64,13 +66,15 @@ router.post("/shorten", async (req, res, next) => {
     try {
       let urlInfo = await UrlShortenModel.findOne({ longUrl });
       if (urlInfo) {
-        res.status(200).json(urlInfo);
+        res
+          .status(200)
+          .json({ message: "URL info successfully fetched", urlInfo });
       } else {
         // generate url code
         const urlCode = shortid.generate();
 
         // construct short url using base url + url code
-        const shortUrl = `${baseUrl}/${urlCode}`;
+        const shortUrl = `${baseUrl}/api/shorturl/${urlCode}`;
 
         urlInfo = new UrlShortenModel({
           urlCode,

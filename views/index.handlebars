@@ -1,0 +1,26 @@
+<h1 class=" display-4 text-center mb-3">{{title}}</h1>
+
+<form>
+    <div class="row ">
+        <div class="form-group col-md-8">
+            <input type="text" class="form-control" id="long-url-input" placeholder="Enter URL to shorten" required>
+        </div>
+        <div class="form-group col-md-4">
+            <button type="submit" id="shorten-btn" class="btn btn-primary btn-block">Shorten</button>
+        </div>
+    </div>
+</form>
+<div class="card">
+    <div class="card-body">
+        <div class="row ">
+            <div class="col p-2">
+                {{!-- <p class="short-link">Cras justo odio</p> --}}
+                <ul class="short-link list-group"></ul>
+            </div>
+            {{!-- <div class="col-md-2">
+                <button type="button" id="copy-btn" class="btn btn-light btn-block">Copy</button>
+            </div> --}}
+            </ul>
+        </div>
+    </div>
+</div>

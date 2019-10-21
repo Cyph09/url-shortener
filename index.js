@@ -1,14 +1,26 @@
+const path = require("path");
 const express = require("express");
 const mongoose = require("mongoose");
+const exphbs = require("express-handlebars");
 
 const config = require("./config");
 
 const app = express();
 
 // Middleware
+// View engine
+app.engine("handlebars", exphbs());
+app.set("view engine", "handlebars");
 // app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use(express.static(path.join(__dirname, "public")));
+
+// Render view
+app.get("/", (req, res) => {
+  res.render("index", { title: "URL Shortener" });
+});
+
 
 // Routes
 app.use("/api/shorturl/", require("./routes/urlShorten"));
